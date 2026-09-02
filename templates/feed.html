@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ service.title }} — IsoArch Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+</head>
+<body>
+<div class="app-shell">
+    <main class="feed">
+        {# service.video_url is built in the view/controller from the Minio bucket + video_key field #}
+        <video class="feed__video" src="{{ service.video_url }}" poster="{{ service.image_url }}"
+               autoplay muted loop playsinline></video>
+        <div class="feed__gradient"></div>
+
+        <div class="feed__overlay">
+            <div class="feed__row">
+                <div class="feed__info">
+                    <h1 class="feed__title">{{ service.title }}</h1>
+
+                    <input type="checkbox" id="desc-toggle-{{ service.id }}" class="desc-toggle__checkbox">
+                    <p class="feed__description">{{ service.description }}</p>
+                    <label for="desc-toggle-{{ service.id }}" class="desc-toggle__label">
+                        <span class="label-more">Подробнее</span>
+                        <span class="label-less">Свернуть</span>
+                    </label>
+
+                    <div class="chips">
+                        <div class="chip">
+                            <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                            <span>{{ service.price_display }} ₽</span>
+                        </div>
+                        <div class="chip">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            <span>{{ service.analysis_date_display }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feed__actions">
+                    <div class="like-action">
+                        <div class="like-action__btn">
+                            <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.5-3 3.5 0 6 3.5 4 7.5C19 16.65 12 21 12 21z"/></svg>
+                        </div>
+                        <span class="like-action__count">{{ service.likes_count }}</span>
+                    </div>
+
+                    {# GET /feed/<id>?next=true — server resolves the next published service after this ID #}
+                    <a href="{{ url_for('feed_by_id', service_id=service.id) }}?next=true" class="next-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        <span class="next-btn__label">Следующий</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% set active_tab = "feed" %}
+        {% set on_video = True %}
+        {% include "partials/_tabbar.html" %}
+    </main>
+</div>
+</body>
+</html>

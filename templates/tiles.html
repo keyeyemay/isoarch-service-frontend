@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все услуги — IsoArch Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+</head>
+<body>
+<div class="app-shell">
+    {% include "partials/_topnav.html" %}
+
+    <main class="page-main">
+        <div class="page-header">
+            <h1 class="page-title">Все услуги</h1>
+            <div class="page-title__bar"></div>
+        </div>
+
+        {# GET /list?filter=... — value re-populated from the query string, no JS needed #}
+        <form class="filter-form" method="get" action="{{ url_for('tiles') }}">
+            <svg class="filter-form__icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input
+                type="text"
+                name="filter"
+                class="filter-input"
+                placeholder="Фильтр по цене или дате"
+                value="{{ filter_value }}">
+        </form>
+
+        <div class="grid">
+            {% for service in services %}
+            <a href="{{ url_for('feed_by_id', service_id=service.id) }}" class="tile">
+                <div class="tile__image-wrap">
+                    <img src="{{ service.image_url }}" alt="{{ service.title }}">
+                </div>
+                <div class="tile__body">
+                    <p class="tile__title">{{ service.title }}</p>
+                    <div class="tile__likes">
+                        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.5-3 3.5 0 6 3.5 4 7.5C19 16.65 12 21 12 21z"/></svg>
+                        <span>{{ service.likes_count }}</span>
+                    </div>
+                </div>
+            </a>
+            {% else %}
+            <div class="empty-state">Ничего не найдено по заданному фильтру</div>
+            {% endfor %}
+        </div>
+    </main>
+
+    {% set active_tab = "tiles" %}
+    {% include "partials/_tabbar.html" %}
+</div>
+</body>
+</html>
