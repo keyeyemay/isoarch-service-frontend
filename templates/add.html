@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новая услуга (черновик) — IsoArch Service</title>
+    <title>Новая сигнатура (черновик) — IsoArch Service</title>
     <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
 </head>
 <body>
@@ -12,49 +12,61 @@
 
     <main class="page-main">
         <div class="page-header">
-            <h1 class="page-title">Новая услуга (черновик)</h1>
+            <h1 class="page-title">Новая сигнатура</h1>
             <div class="page-title__bar"></div>
         </div>
 
-        {# GET /draft — the single service with status "черновик". No save/edit action per Lab 1 scope. #}
+        {# GET /draft — черновик: только поля для ввода и медиа сверху. Без кнопок по требованиям ЛР1 #}
         <div class="form-stack">
+            {# Сверху медиа: фото и видео #}
             <div class="media-upload">
                 <div class="upload-card">
-                    <div class="upload-card__icon">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+                    <div class="upload-card__preview">
+                        <img src="{{ draft.image_url }}" alt="Фото образца">
                     </div>
-                    <span class="upload-card__label">Загрузить фото</span>
+                    <span class="upload-card__label">Фото образца</span>
                 </div>
                 <div class="upload-card">
-                    <div class="upload-card__icon">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg>
+                    <div class="upload-card__preview">
+                        <video src="{{ draft.video_url }}" muted loop autoplay playsinline></video>
                     </div>
-                    <span class="upload-card__label">Загрузить видео</span>
+                    <span class="upload-card__label">Видео анализа</span>
                 </div>
             </div>
 
+            {# Поля ввода данных #}
             <div class="form-card">
                 <div class="field">
-                    <label class="field__label" for="title">Название услуги</label>
+                    <label class="field__label" for="title">Название сигнатуры</label>
                     <input class="field__input" id="title" type="text"
-                           value="{{ draft.title }}" placeholder="Введите название...">
+                           value="{{ draft.title }}" placeholder="Например: Погребение №15 (Бронза)">
                 </div>
                 <div class="field">
-                    <label class="field__label" for="description">Описание</label>
-                    <textarea class="field__textarea" id="description"
-                              placeholder="Подробное описание процедуры...">{{ draft.description }}</textarea>
+                    <label class="field__label" for="description">Описание исследования</label>
+                    <textarea class="field__textarea" id="description" rows="3"
+                              placeholder="Описание костного образца и контекста находки...">{{ draft.description }}</textarea>
                 </div>
             </div>
 
             <div class="form-card">
                 <div class="icon-field">
                     <div class="icon-field__icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                        <svg viewBox="0 0 24 24"><text x="3" y="17" font-size="11" font-family="monospace" fill="currentColor">N</text><path d="M17 5v14"/></svg>
                     </div>
                     <div class="icon-field__body">
-                        <span class="icon-field__label">Цена услуги (₽)</span>
-                        <input class="icon-field__input" type="number" step="0.01"
-                               value="{{ draft.price }}" placeholder="0.00">
+                        <span class="icon-field__label">δ¹⁵N (‰) — азот</span>
+                        <input class="icon-field__input" type="number" step="0.1"
+                               value="{{ draft.delta_n15 }}" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="icon-field">
+                    <div class="icon-field__icon">
+                        <svg viewBox="0 0 24 24"><text x="2" y="17" font-size="11" font-family="monospace" fill="currentColor">C</text><path d="M17 5v14"/></svg>
+                    </div>
+                    <div class="icon-field__body">
+                        <span class="icon-field__label">δ¹³C (‰) — углерод</span>
+                        <input class="icon-field__input" type="number" step="0.1"
+                               value="{{ draft.delta_c13 }}" placeholder="0.0">
                     </div>
                 </div>
                 <div class="icon-field">
@@ -66,11 +78,6 @@
                         <input class="icon-field__input" type="date" value="{{ draft.analysis_date_iso }}">
                     </div>
                 </div>
-            </div>
-
-            <div class="action-area">
-                <a href="{{ url_for('tiles') }}" class="btn btn--secondary">Отмена</a>
-                <button class="btn btn--primary" type="button" disabled title="Редактирование не входит в ЛР1">Сохранить</button>
             </div>
         </div>
     </main>

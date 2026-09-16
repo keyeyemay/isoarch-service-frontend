@@ -1,6 +1,6 @@
 {# active_tab: "feed" | "add" | "tiles", feed_entry_id — passed in from the parent template's context #}
 <nav class="tabbar{% if on_video %} tabbar--on-video{% endif %}">
-    <a href="{{ url_for('feed_by_id', service_id=feed_entry_id) }}" class="tab{% if active_tab == 'feed' %} tab--active{% endif %}">
+    <a href="{{ url_for('feed_by_id', signature_id=feed_entry_id) }}" class="tab{% if active_tab == 'feed' %} tab--active{% endif %}">
         <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M9 9l6 3-6 3z"/></svg>
         <span>Лента</span>
     </a>

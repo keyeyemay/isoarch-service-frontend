@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Все услуги — IsoArch Service</title>
+    <title>Изотопные сигнатуры — IsoArch Service</title>
     <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
 </head>
 <body>
@@ -12,37 +12,77 @@
 
     <main class="page-main">
         <div class="page-header">
-            <h1 class="page-title">Все услуги</h1>
+            <h1 class="page-title">Изотопные сигнатуры</h1>
             <div class="page-title__bar"></div>
         </div>
 
-        {# GET /list?filter=... — value re-populated from the query string, no JS needed #}
-        <form class="filter-form" method="get" action="{{ url_for('tiles') }}">
-            <svg class="filter-form__icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            <input
-                type="text"
-                name="filter"
-                class="filter-input"
-                placeholder="Фильтр по цене или дате"
-                value="{{ filter_value }}">
+        {# Фильтрация по углероду δ¹³C: числа, слайдер и красная кнопка #}
+        <form class="filter-box" method="get" action="{{ url_for('tiles') }}">
+            <div class="filter-box__header">
+                <span class="filter-box__label">Фильтр по углероду (δ¹³C):</span>
+                <div class="filter-number-wrap">
+                    <span class="filter-prefix">до</span>
+                    <input
+                        type="number"
+                        id="c13_num"
+                        name="c13_max"
+                        step="0.1"
+                        min="-25"
+                        max="-10"
+                        value="{{ c13_max }}"
+                        class="filter-number-input"
+                        oninput="document.getElementById('c13_slider').value = this.value">
+                    <span class="filter-unit">‰</span>
+                </div>
+            </div>
+
+            <div class="filter-slider-wrap">
+                <span class="slider-boundary">-25 ‰</span>
+                <input
+                    type="range"
+                    id="c13_slider"
+                    min="-25"
+                    max="-10"
+                    step="0.5"
+                    value="{{ c13_max }}"
+                    class="filter-range"
+                    oninput="document.getElementById('c13_num').value = this.value">
+                <span class="slider-boundary">-10 ‰</span>
+            </div>
+
+            <div class="filter-box__actions">
+                <button type="submit" class="btn-filter">Применить</button>
+                {% if is_filtered %}
+                <a href="{{ url_for('tiles') }}" class="btn-filter-reset">Сбросить</a>
+                {% endif %}
+            </div>
         </form>
 
         <div class="grid">
-            {% for service in services %}
-            <a href="{{ url_for('feed_by_id', service_id=service.id) }}" class="tile">
+            {% for signature in signatures %}
+            <a href="{{ url_for('feed_by_id', signature_id=signature.id) }}" class="tile">
                 <div class="tile__image-wrap">
-                    <img src="{{ service.image_url }}" alt="{{ service.title }}">
+                    <img src="{{ signature.image_url }}" alt="{{ signature.title }}">
                 </div>
                 <div class="tile__body">
-                    <p class="tile__title">{{ service.title }}</p>
-                    <div class="tile__likes">
-                        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.5-3 3.5 0 6 3.5 4 7.5C19 16.65 12 21 12 21z"/></svg>
-                        <span>{{ service.likes_count }}</span>
+                    <p class="tile__title">{{ signature.title }}</p>
+                    <div class="tile__params">
+                        <span class="tile__param-badge tile__param-badge--c13">δ¹³C: {{ signature.delta_c13_display }}</span>
+                        <span class="tile__param-badge tile__param-badge--n15">δ¹⁵N: {{ signature.delta_n15_display }}</span>
+                    </div>
+                    <div class="tile__footer">
+                        <div class="tile__likes">
+                            <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.5-3 3.5 0 6 3.5 4 7.5C19 16.65 12 21 12 21z"/></svg>
+                            <span>{{ signature.likes_count }}</span>
+                        </div>
                     </div>
                 </div>
             </a>
             {% else %}
-            <div class="empty-state">Ничего не найдено по заданному фильтру</div>
+            <div class="empty-state">
+                <p>Ничего не найдено по заданному фильтру</p>
+                <a href="{{ url_for('tiles') }}" class="btn-filter-reset" style="display:inline-block; margin-top:8px;">Сбросить фильтр</a>
+            </div>
             {% endfor %}
         </div>
     </main>
