@@ -9,8 +9,9 @@
 <body>
 <div class="app-shell">
     <main class="feed">
-        {# signature.video_url is built in the view/controller from the Minio bucket + video_key field #}
+        {# signature.video_url is built in the view/controller with fallback to default media #}
         <video class="feed__video" src="{{ signature.video_url }}" poster="{{ signature.image_url }}"
+               onerror="this.src='/static/videos/default_signature.mp4'"
                autoplay muted loop playsinline></video>
         <div class="feed__gradient"></div>
 

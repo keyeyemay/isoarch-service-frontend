@@ -548,11 +548,54 @@ button, input, textarea {
   border: 1px solid var(--color-border);
 }
 
+.tile__link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
 .tile__footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  padding: 0 10px 8px 10px;
   margin-top: 2px;
+}
+
+.tile__delete-form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.btn-tile-delete {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-tile-delete:hover {
+  color: var(--color-accent);
+  background: rgba(207, 59, 59, 0.1);
+}
+
+.btn-tile-delete svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 .tile__likes {
