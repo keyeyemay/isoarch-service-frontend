@@ -1,6 +1,5 @@
 import type { IsotopicSignature } from "./types";
 
-// Пустые image_url / video_url -> на карточках будут медиа по умолчанию
 export const ISOTOPIC_SIGNATURES_MOCK: IsotopicSignature[] = [
   {
     id: 1,

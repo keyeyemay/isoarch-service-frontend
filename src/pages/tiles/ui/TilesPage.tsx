@@ -12,20 +12,16 @@ import { SignatureGrid } from "../../../widgets/signature-grid";
 import { TopNav } from "../../../widgets/top-nav";
 
 export const TilesPage: FC = () => {
-  // Массив сигнатур хранится на верхнем уровне страницы и сверху вниз уходит в карточки
   const [signatures, setSignatures] = useState<IsotopicSignature[]>([]);
-  // Значение в полях фильтра и значение, по которому список отфильтрован сейчас
   const [c13Value, setC13Value] = useState(String(C13_MAX));
   const [appliedC13, setAppliedC13] = useState<number | null>(null);
 
   const { setSignatures: setFeedSignatures } = useOutletContext<SignaturesOutletContext>();
   const navigate = useNavigate();
 
-  // Выполняется после отрисовки и при каждом применении фильтра
   useEffect(() => {
     getIsotopicSignatures(appliedC13 ?? undefined).then((list) => {
       setSignatures(list);
-      // Лента листает тот же список и в том же порядке, что показан в плитке
       setFeedSignatures(list);
     });
   }, [appliedC13, setFeedSignatures]);

@@ -9,7 +9,6 @@ import { ROUTES } from "../shared/config/routes";
 import { TabBar } from "../widgets/tab-bar";
 
 export const AppLayout: FC = () => {
-  // Общий список для плитки и ленты; передаётся через Outlet context (не React Context)
   const [signatures, setSignatures] = useState<IsotopicSignature[]>([]);
   const location = useLocation();
 

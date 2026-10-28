@@ -19,7 +19,6 @@ interface Props {
   onNext: () => void;
 }
 
-// Родитель передаёт key={id}: при смене сигнатуры состояние fallback сбрасывается
 export const SignatureSlide: FC<Props> = ({
   title,
   description,

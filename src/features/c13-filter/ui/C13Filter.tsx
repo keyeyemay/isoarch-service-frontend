@@ -13,7 +13,6 @@ interface Props {
   isApplied: boolean;
 }
 
-// Слайдер и числовое поле работают с одним значением value -> всегда синхронизированы
 export const C13Filter: FC<Props> = ({ value, setValue, onApply, onReset, isApplied }) => (
   <Form
     className="filter-box"
