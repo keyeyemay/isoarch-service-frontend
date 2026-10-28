@@ -1,0 +1,10 @@
+/* Мобильный макет: узкая колонка 390px по центру окна */
+.app-shell {
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}

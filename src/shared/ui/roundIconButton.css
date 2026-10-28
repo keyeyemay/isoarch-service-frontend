@@ -1,0 +1,50 @@
+/* Круглые кнопки поверх видео в ленте */
+.feed-icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.feed-icon-btn__circle {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: #FFFFFF;
+  border: 1px solid var(--color-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+button.feed-icon-btn {
+  cursor: pointer;
+}
+
+button.feed-icon-btn:hover .feed-icon-btn__circle {
+  transform: scale(1.06);
+}
+
+.feed-icon-btn__circle svg {
+  width: 20px;
+  height: 19px;
+  fill: var(--color-accent);
+}
+
+.feed-icon-btn__circle--accent {
+  background: var(--color-accent);
+  border: 1.5px solid #FFFFFF;
+}
+
+.feed-icon-btn__circle--accent svg {
+  width: 22px;
+  height: 22px;
+  stroke: #FFFFFF;
+  stroke-width: 2.5;
+  fill: none;
+}

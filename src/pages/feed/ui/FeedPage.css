@@ -1,0 +1,25 @@
+.feed {
+  position: relative;
+  flex: 1;
+  min-height: 100vh;
+  background: #000;
+  overflow: hidden;
+}
+
+.feed__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 16px 92px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+}
+
+.feed__empty p {
+  margin: 0;
+}
