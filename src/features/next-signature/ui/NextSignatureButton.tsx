@@ -4,15 +4,17 @@ import { ArrowDownIcon } from "../../../shared/ui/icons";
 
 interface Props {
   onClick: () => void;
+  disabled: boolean;
 }
 
-export const NextSignatureButton: FC<Props> = ({ onClick }) => (
+export const NextSignatureButton: FC<Props> = ({ onClick, disabled }) => (
   <button
     type="button"
     className="feed-icon-btn"
     title="Следующая сигнатура"
     aria-label="Следующая сигнатура"
     onClick={onClick}
+    disabled={disabled}
   >
     <span className="feed-icon-btn__circle feed-icon-btn__circle--accent">
       <ArrowDownIcon />

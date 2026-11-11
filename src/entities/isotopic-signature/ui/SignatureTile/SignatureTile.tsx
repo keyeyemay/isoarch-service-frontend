@@ -1,5 +1,5 @@
 import "./SignatureTile.css";
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import { Card } from "react-bootstrap";
 import { DEFAULT_IMAGE } from "../../../../shared/config/media";
 import { useFallbackSrc } from "../../../../shared/lib/useFallbackSrc";
@@ -13,6 +13,7 @@ interface Props {
   delta_n15: number | null;
   likes_count: number;
   onClick: () => void;
+  actions?: ReactNode;
 }
 
 export const SignatureTile: FC<Props> = ({
@@ -22,6 +23,7 @@ export const SignatureTile: FC<Props> = ({
   delta_n15,
   likes_count,
   onClick,
+  actions,
 }) => {
   const image = useFallbackSrc(image_url, DEFAULT_IMAGE);
 
@@ -44,6 +46,15 @@ export const SignatureTile: FC<Props> = ({
         </div>
       </Card.Body>
       <div className="tile__footer">
+        {actions && (
+          <div
+            className="tile__actions"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
+            {actions}
+          </div>
+        )}
         <div className="tile__likes">
           <HeartIcon />
           <span>{likes_count}</span>

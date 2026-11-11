@@ -1,22 +1,26 @@
-// Поля совпадают с публичным ответом веб-сервиса ЛР4 (ServiceResponse)
-export interface IsotopicSignature {
-  id: number;
+import type { ServiceDraftResponse, ServiceResponse } from "../../../shared/api";
+
+export type IsotopicSignature = ServiceResponse;
+export type SignatureDraft = ServiceDraftResponse;
+
+export interface SignatureFilterInput {
+  c13Max: string;
   title: string;
-  description: string | null;
-  delta_n15: number | null;
-  delta_c13: number | null;
-  image_url: string;
-  video_url: string;
-  status: "published";
-  created_at: string;
-  formed_at: string | null;
-  likes_count: number;
-  is_liked: 0 | 1;
-  is_creator: 0 | 1;
 }
 
-// Общий список сигнатур, который layout передаёт страницам через Outlet context
-export interface SignaturesOutletContext {
-  signatures: IsotopicSignature[];
-  setSignatures: (signatures: IsotopicSignature[]) => void;
+export interface AppliedSignatureFilter {
+  c13Max: number | null;
+  title: string;
+}
+
+export interface NewSignatureData {
+  title: string;
+  image: File;
+  video: File;
+}
+
+export interface PublishSignatureData {
+  description: string;
+  delta_n15: number;
+  delta_c13: number;
 }

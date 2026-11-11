@@ -1,23 +1,20 @@
 import "./AppLayout.css";
-import { useState, type FC } from "react";
+import type { FC } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import type {
-  IsotopicSignature,
-  SignaturesOutletContext,
-} from "../entities/isotopic-signature";
+import { useSignaturesLoading } from "../entities/isotopic-signature";
 import { ROUTES } from "../shared/config/routes";
+import { LoadingOverlay } from "../shared/ui/LoadingOverlay";
 import { TabBar } from "../widgets/tab-bar";
 
 export const AppLayout: FC = () => {
-  const [signatures, setSignatures] = useState<IsotopicSignature[]>([]);
   const location = useLocation();
-
-  const context: SignaturesOutletContext = { signatures, setSignatures };
+  const loading = useSignaturesLoading();
 
   return (
     <div className="app-shell">
-      <Outlet context={context} />
+      <Outlet />
       <TabBar onVideo={location.pathname.startsWith(ROUTES.FEED)} />
+      {loading && <LoadingOverlay />}
     </div>
   );
 };

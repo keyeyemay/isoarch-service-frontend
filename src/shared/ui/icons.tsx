@@ -1,7 +1,5 @@
 import type { FC } from "react";
 
-// Outline-иконки из ЛР2 (templates/partials/_tabbar.html и др.)
-
 export const FeedIcon: FC = () => (
   <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z" /><path d="M9 9l6 3-6 3z" /></svg>
 );
@@ -35,4 +33,12 @@ export const ArrowDownIcon: FC = () => (
 
 export const LogoIcon: FC = () => (
   <svg viewBox="0 0 14 19"><path d="M7 0L0 5v9l7 5 7-5V5L7 0z" /></svg>
+);
+
+export const LogoutIcon: FC = () => (
+  <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+);
+
+export const TrashIcon: FC = () => (
+  <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" /></svg>
 );

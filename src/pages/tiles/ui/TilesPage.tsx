@@ -1,48 +1,60 @@
-import "./TilesPage.css";
-import { useEffect, useState, type FC } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import "../../../shared/ui/page.css";
+import { useEffect, type FC } from "react";
+import { Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
-  getIsotopicSignatures,
-  type IsotopicSignature,
-  type SignaturesOutletContext,
+  applyFilterAction,
+  deleteSignature,
+  getSignaturesList,
+  resetFilterAction,
+  setC13InputAction,
+  setTitleInputAction,
+  useAppliedSignatureFilter,
+  useSignatureFilter,
+  useSignatures,
+  useSignaturesError,
+  useSignaturesIsMock,
+  useSignaturesLoading,
 } from "../../../entities/isotopic-signature";
-import { C13Filter, C13_MAX, C13_MIN } from "../../../features/c13-filter";
+import { useIsAuthenticated } from "../../../entities/user";
+import { C13Filter } from "../../../features/c13-filter";
 import { ROUTES } from "../../../shared/config/routes";
+import { useAppDispatch } from "../../../shared/lib/redux";
 import { SignatureGrid } from "../../../widgets/signature-grid";
 import { TopNav } from "../../../widgets/top-nav";
 
 export const TilesPage: FC = () => {
-  const [signatures, setSignatures] = useState<IsotopicSignature[]>([]);
-  const [c13Value, setC13Value] = useState(String(C13_MAX));
-  const [appliedC13, setAppliedC13] = useState<number | null>(null);
-
-  const { setSignatures: setFeedSignatures } = useOutletContext<SignaturesOutletContext>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const signatures = useSignatures();
+  const filter = useSignatureFilter();
+  const appliedFilter = useAppliedSignatureFilter();
+  const loading = useSignaturesLoading();
+  const error = useSignaturesError();
+  const isMock = useSignaturesIsMock();
+  const isAuthenticated = useIsAuthenticated();
+
   useEffect(() => {
-    getIsotopicSignatures(appliedC13 ?? undefined).then((list) => {
-      setSignatures(list);
-      setFeedSignatures(list);
-    });
-  }, [appliedC13, setFeedSignatures]);
+    dispatch(getSignaturesList());
+  }, [dispatch, isAuthenticated]);
 
   const handleApply = () => {
-    const value = Number(c13Value);
-    if (c13Value === "" || Number.isNaN(value)) {
-      return;
-    }
-    const clamped = Math.min(C13_MAX, Math.max(C13_MIN, value));
-    setC13Value(String(clamped));
-    setAppliedC13(clamped);
+    dispatch(applyFilterAction());
+    dispatch(getSignaturesList());
   };
 
   const handleReset = () => {
-    setC13Value(String(C13_MAX));
-    setAppliedC13(null);
+    dispatch(resetFilterAction());
+    dispatch(getSignaturesList());
   };
 
   const handleOpen = (id: number) => {
     navigate(`${ROUTES.FEED}/${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteSignature(id));
   };
 
   return (
@@ -55,14 +67,31 @@ export const TilesPage: FC = () => {
         </div>
 
         <C13Filter
-          value={c13Value}
-          setValue={setC13Value}
+          c13Value={filter.c13Max}
+          title={filter.title}
+          setC13Value={(value) => dispatch(setC13InputAction(value))}
+          setTitle={(value) => dispatch(setTitleInputAction(value))}
           onApply={handleApply}
           onReset={handleReset}
-          isApplied={appliedC13 !== null}
+          isApplied={appliedFilter.c13Max !== null || appliedFilter.title !== ""}
+          disabled={loading}
         />
 
-        <SignatureGrid signatures={signatures} onOpen={handleOpen} onReset={handleReset} />
+        {isMock && (
+          <Alert variant="warning" className="page-alert">
+            Сервер недоступен — показаны демонстрационные данные
+          </Alert>
+        )}
+        {error && <Alert variant="danger" className="page-alert">{error}</Alert>}
+
+        <SignatureGrid
+          signatures={signatures}
+          canDelete={isAuthenticated}
+          disabled={loading}
+          onOpen={handleOpen}
+          onDelete={handleDelete}
+          onReset={handleReset}
+        />
       </main>
     </>
   );

@@ -28,6 +28,8 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--color-text-secondary);
+  border: none;
+  background: none;
 }
 
 .tab-bar .nav-link svg {
@@ -48,7 +50,6 @@
   font-weight: 700;
 }
 
-/* Пункты, недоступные гостю в ЛР5 */
 .tab-bar .nav-link.disabled {
   color: var(--color-text-secondary);
   opacity: 0.4;

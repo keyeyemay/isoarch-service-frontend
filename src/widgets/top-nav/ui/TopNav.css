@@ -23,3 +23,18 @@
   height: 19px;
   fill: var(--color-accent);
 }
+
+.top-nav__user {
+  margin-left: auto;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-chip-bg);
+  border: 1px solid rgba(207, 59, 59, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent-dark);
+}

@@ -79,8 +79,18 @@
 
 .tile__footer {
   display: flex;
-  justify-content: flex-end;
-  padding: 0 10px 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px 8px;
+}
+
+.tile__actions {
+  display: flex;
+}
+
+.tile__likes:only-child {
+  margin-left: auto;
 }
 
 .tile__likes {

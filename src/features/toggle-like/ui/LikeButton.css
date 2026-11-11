@@ -1,0 +1,20 @@
+.like-btn .feed-icon-btn__circle svg {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.like-btn--liked .feed-icon-btn__circle {
+  background: var(--color-chip-bg);
+}
+
+.like-btn--liked .feed-icon-btn__circle svg {
+  fill: var(--color-accent);
+}
+
+.like-action__count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}

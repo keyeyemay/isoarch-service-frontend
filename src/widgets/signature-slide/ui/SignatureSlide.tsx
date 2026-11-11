@@ -4,9 +4,9 @@ import type { FC } from "react";
 import { formatDelta } from "../../../entities/isotopic-signature";
 import { ExpandableDescription } from "../../../features/expand-description";
 import { NextSignatureButton } from "../../../features/next-signature";
+import { LikeButton } from "../../../features/toggle-like";
 import { DEFAULT_IMAGE, DEFAULT_VIDEO } from "../../../shared/config/media";
 import { useFallbackSrc } from "../../../shared/lib/useFallbackSrc";
-import { HeartIcon } from "../../../shared/ui/icons";
 
 interface Props {
   title: string;
@@ -16,6 +16,9 @@ interface Props {
   image_url: string;
   video_url: string;
   likes_count: number;
+  liked: boolean;
+  disabled: boolean;
+  onLike: () => void;
   onNext: () => void;
 }
 
@@ -27,6 +30,9 @@ export const SignatureSlide: FC<Props> = ({
   image_url,
   video_url,
   likes_count,
+  liked,
+  disabled,
+  onLike,
   onNext,
 }) => {
   const video = useFallbackSrc(video_url, DEFAULT_VIDEO);
@@ -62,14 +68,9 @@ export const SignatureSlide: FC<Props> = ({
               <span className="feed__param-val">{formatDelta(delta_n15)}</span>
             </div>
 
-            <div className="feed-icon-btn" title="Лайки">
-              <span className="feed-icon-btn__circle">
-                <HeartIcon />
-              </span>
-              <span className="like-action__count">{likes_count}</span>
-            </div>
+            <LikeButton liked={liked} likesCount={likes_count} onToggle={onLike} disabled={disabled} />
 
-            <NextSignatureButton onClick={onNext} />
+            <NextSignatureButton onClick={onNext} disabled={disabled} />
           </div>
         </div>
       </div>

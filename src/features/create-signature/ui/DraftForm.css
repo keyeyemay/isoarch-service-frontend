@@ -1,0 +1,10 @@
+.draft-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.draft-form .action-area .btn-secondary {
+  margin-right: auto;
+}

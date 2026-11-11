@@ -82,10 +82,3 @@
   line-height: 14px;
   white-space: nowrap;
 }
-
-.like-action__count {
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}

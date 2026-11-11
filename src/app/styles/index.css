@@ -20,7 +20,6 @@
 
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Переопределение переменных Bootstrap под дизайн IsoArch */
   --bs-body-font-family: var(--font-body);
   --bs-body-color: var(--color-text-primary);
   --bs-body-bg: var(--color-bg);
@@ -36,7 +35,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Кнопки React-Bootstrap: компактные, по ширине содержимого */
 .btn {
   --bs-btn-padding-x: 12px;
   --bs-btn-padding-y: 7px;

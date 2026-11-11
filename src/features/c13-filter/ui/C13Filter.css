@@ -93,3 +93,21 @@
   gap: 10px;
   margin-top: 2px;
 }
+
+.filter-title-input.form-control {
+  padding: 7px 10px;
+  font-size: 13px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+}
+
+.filter-title-input.form-control::placeholder {
+  color: var(--color-text-placeholder-input);
+}
+
+.filter-title-input.form-control:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.2rem rgba(207, 59, 59, 0.15);
+}
