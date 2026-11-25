@@ -107,3 +107,23 @@
   height: 11px;
   fill: var(--color-accent);
 }
+
+@media (min-width: 768px) {
+  .tile {
+    padding: 10px;
+  }
+
+  .tile__title {
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .tile__param-badge {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .tile__likes {
+    font-size: 12px;
+  }
+}

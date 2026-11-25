@@ -1,4 +1,5 @@
 import "../../../shared/ui/page.css";
+import "./TilesPage.css";
 import { useEffect, type FC } from "react";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ import {
 } from "../../../entities/isotopic-signature";
 import { useIsAuthenticated } from "../../../entities/user";
 import { C13Filter } from "../../../features/c13-filter";
+import { IS_MOCK_ONLY } from "../../../shared/config/api";
 import { ROUTES } from "../../../shared/config/routes";
 import { useAppDispatch } from "../../../shared/lib/redux";
 import { SignatureGrid } from "../../../widgets/signature-grid";
@@ -66,32 +68,40 @@ export const TilesPage: FC = () => {
           <div className="page-title__bar" />
         </div>
 
-        <C13Filter
-          c13Value={filter.c13Max}
-          title={filter.title}
-          setC13Value={(value) => dispatch(setC13InputAction(value))}
-          setTitle={(value) => dispatch(setTitleInputAction(value))}
-          onApply={handleApply}
-          onReset={handleReset}
-          isApplied={appliedFilter.c13Max !== null || appliedFilter.title !== ""}
-          disabled={loading}
-        />
+        <div className="tiles-layout">
+          <aside className="tiles-layout__filters">
+            <C13Filter
+              c13Value={filter.c13Max}
+              title={filter.title}
+              setC13Value={(value) => dispatch(setC13InputAction(value))}
+              setTitle={(value) => dispatch(setTitleInputAction(value))}
+              onApply={handleApply}
+              onReset={handleReset}
+              isApplied={appliedFilter.c13Max !== null || appliedFilter.title !== ""}
+              disabled={loading}
+            />
 
-        {isMock && (
-          <Alert variant="warning" className="page-alert">
-            Сервер недоступен — показаны демонстрационные данные
-          </Alert>
-        )}
-        {error && <Alert variant="danger" className="page-alert">{error}</Alert>}
+            {isMock && (
+              <Alert variant="warning" className="page-alert">
+                {IS_MOCK_ONLY
+                  ? "Демо-версия на GitHub Pages — показаны mock-данные"
+                  : "Сервер недоступен — показаны демонстрационные данные"}
+              </Alert>
+            )}
+            {error && <Alert variant="danger" className="page-alert">{error}</Alert>}
+          </aside>
 
-        <SignatureGrid
-          signatures={signatures}
-          canDelete={isAuthenticated}
-          disabled={loading}
-          onOpen={handleOpen}
-          onDelete={handleDelete}
-          onReset={handleReset}
-        />
+          <section className="tiles-layout__grid" aria-label="Каталог сигнатур">
+            <SignatureGrid
+              signatures={signatures}
+              canDelete={isAuthenticated}
+              disabled={loading}
+              onOpen={handleOpen}
+              onDelete={handleDelete}
+              onReset={handleReset}
+            />
+          </section>
+        </div>
       </main>
     </>
   );

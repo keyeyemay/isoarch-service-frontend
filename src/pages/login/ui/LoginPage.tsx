@@ -17,7 +17,7 @@ export const LoginPage: FC = () => {
   return (
     <>
       <TopNav />
-      <main className="page-main">
+      <main className="page-main page-main--narrow">
         <div className="page-header">
           <h1 className="page-title">Вход</h1>
           <div className="page-title__bar" />

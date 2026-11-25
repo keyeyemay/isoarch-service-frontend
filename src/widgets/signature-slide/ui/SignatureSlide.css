@@ -82,3 +82,20 @@
   line-height: 14px;
   white-space: nowrap;
 }
+
+@media (min-width: 576px) {
+  .feed__info {
+    max-width: 360px;
+  }
+}
+
+@media (min-width: 768px) {
+  .feed__overlay {
+    padding: 24px 24px 100px;
+  }
+
+  .feed__title {
+    font-size: 26px;
+    line-height: 32px;
+  }
+}

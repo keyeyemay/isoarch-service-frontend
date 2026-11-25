@@ -4,11 +4,12 @@ import { AddPage } from "../pages/add";
 import { FeedPage } from "../pages/feed";
 import { LoginPage } from "../pages/login";
 import { TilesPage } from "../pages/tiles";
+import { ROUTER_BASENAME } from "../shared/config/api";
 import { ROUTES } from "../shared/config/routes";
 import { AppLayout } from "./AppLayout";
 
 export const App: FC = () => (
-  <BrowserRouter>
+  <BrowserRouter basename={ROUTER_BASENAME}>
     <Routes>
       <Route element={<AppLayout />}>
         <Route path={ROUTES.TILES} element={<TilesPage />} />

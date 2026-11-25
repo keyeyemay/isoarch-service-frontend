@@ -38,3 +38,19 @@
   font-weight: 700;
   color: var(--color-accent-dark);
 }
+
+@media (min-width: 768px) {
+  .top-nav {
+    padding: 0 max(24px, calc((100% - 1200px) / 2 + 24px));
+  }
+
+  .top-nav__user {
+    max-width: 280px;
+  }
+}
+
+@media (min-width: 992px) {
+  .top-nav {
+    padding: 0 max(32px, calc((100% - 1200px) / 2 + 32px));
+  }
+}

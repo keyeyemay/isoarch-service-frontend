@@ -8,3 +8,28 @@
 .draft-form .action-area .btn-secondary {
   margin-right: auto;
 }
+
+@media (min-width: 768px) {
+  .draft-form {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas:
+      "media fields"
+      "media actions";
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    gap: 16px 24px;
+  }
+
+  .draft-form > .media-upload {
+    grid-area: media;
+  }
+
+  .draft-form > .form-card {
+    grid-area: fields;
+  }
+
+  .draft-form > .action-area {
+    grid-area: actions;
+  }
+}

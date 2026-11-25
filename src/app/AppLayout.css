@@ -1,7 +1,7 @@
 .app-shell {
-  max-width: 390px;
-  margin: 0 auto;
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--color-bg);
   position: relative;
   display: flex;

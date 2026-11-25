@@ -54,3 +54,14 @@
   color: var(--color-text-secondary);
   opacity: 0.4;
 }
+
+@media (min-width: 768px) {
+  .tab-bar.nav {
+    justify-content: center;
+  }
+
+  .tab-bar .nav-link {
+    flex: 0 1 160px;
+    font-size: 13px;
+  }
+}

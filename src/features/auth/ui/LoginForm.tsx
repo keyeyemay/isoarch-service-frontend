@@ -3,6 +3,7 @@ import "./LoginForm.css";
 import { useState, type ChangeEvent, type FC, type FormEvent } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { setUserAction } from "../../../entities/user";
+import { IS_MOCK_ONLY } from "../../../shared/config/api";
 import { getErrorMessage, getErrorStatus } from "../../../shared/lib/apiError";
 import { useAppDispatch } from "../../../shared/lib/redux";
 import { LoadingOverlay } from "../../../shared/ui/LoadingOverlay";
@@ -46,6 +47,11 @@ export const LoginForm: FC<Props> = ({ onSuccess }) => {
   return (
     <Form className="form-card login-form" onSubmit={handleSubmit}>
       {loading && <LoadingOverlay />}
+      {IS_MOCK_ONLY && (
+        <Alert variant="warning" className="form-alert">
+          Демо-версия на GitHub Pages работает только с mock-данными — вход недоступен
+        </Alert>
+      )}
       {error && <Alert variant="danger" className="form-alert">{error}</Alert>}
 
       <Form.Group controlId="username" className="field">
@@ -79,7 +85,7 @@ export const LoginForm: FC<Props> = ({ onSuccess }) => {
       </Form.Group>
 
       <div className="action-area">
-        <Button type="submit" variant="primary" disabled={loading}>Войти</Button>
+        <Button type="submit" variant="primary" disabled={loading || IS_MOCK_ONLY}>Войти</Button>
       </div>
     </Form>
   );

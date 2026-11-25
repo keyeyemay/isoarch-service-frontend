@@ -55,7 +55,7 @@ export const AddPage: FC = () => {
   return (
     <>
       <TopNav />
-      <main className="page-main">
+      <main className="page-main page-main--form">
         <div className="page-header">
           <h1 className="page-title">{draft ? `Публикация: ${draft.title}` : "Новая сигнатура"}</h1>
           <div className="page-title__bar" />

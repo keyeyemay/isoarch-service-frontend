@@ -1,0 +1,29 @@
+.tiles-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .tiles-layout__filters {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 992px) {
+  .tiles-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+
+  .tiles-layout__filters {
+    position: sticky;
+    top: 24px;
+    max-width: none;
+  }
+
+  .tiles-layout__grid .grid {
+    margin-top: 0;
+  }
+}

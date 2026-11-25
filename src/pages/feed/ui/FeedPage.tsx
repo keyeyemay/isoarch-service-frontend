@@ -62,25 +62,27 @@ export const FeedPage: FC = () => {
 
   return (
     <main className="feed">
-      {signature ? (
-        <SignatureSlide
-          key={signature.id}
-          {...signature}
-          liked={isAuthenticated && signature.is_liked === 1}
-          disabled={loading}
-          onLike={handleLike}
-          onNext={handleNext}
-        />
-      ) : (
-        !loading && (
-          <div className="feed__empty">
-            <p>{error ?? (id ? "Сигнатура не найдена" : "Лента пуста")}</p>
-            <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.TILES)}>
-              К плитке
-            </Button>
-          </div>
-        )
-      )}
+      <div className="feed__stage">
+        {signature ? (
+          <SignatureSlide
+            key={signature.id}
+            {...signature}
+            liked={isAuthenticated && signature.is_liked === 1}
+            disabled={loading}
+            onLike={handleLike}
+            onNext={handleNext}
+          />
+        ) : (
+          !loading && (
+            <div className="feed__empty">
+              <p>{error ?? (id ? "Сигнатура не найдена" : "Лента пуста")}</p>
+              <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.TILES)}>
+                К плитке
+              </Button>
+            </div>
+          )
+        )}
+      </div>
     </main>
   );
 };

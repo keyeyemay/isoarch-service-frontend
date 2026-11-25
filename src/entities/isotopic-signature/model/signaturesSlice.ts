@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { api, type LikeResponse } from "../../../shared/api";
+import { IS_MOCK_ONLY } from "../../../shared/config/api";
 import { getErrorMessage, getErrorStatus, isBackendUnavailable } from "../../../shared/lib/apiError";
 import { withMediaSrc } from "../lib/mediaUrl";
 import { ISOTOPIC_SIGNATURES_MOCK } from "./mock";
@@ -74,6 +75,9 @@ export const getSignaturesList = createAsyncThunk<
   ThunkConfig
 >("signatures/getSignaturesList", async (_, { getState, rejectWithValue }) => {
   const { c13Max, title } = getState().signatures.appliedFilter;
+  if (IS_MOCK_ONLY) {
+    return { items: filterMock(getState().signatures.appliedFilter), isMock: true };
+  }
   try {
     const { data } = await api.services.getServices({
       ...(c13Max !== null && { c13_max: c13Max }),
@@ -93,6 +97,10 @@ export const getSignature = createAsyncThunk<
   number,
   ThunkConfig
 >("signatures/getSignature", async (id, { getState, rejectWithValue }) => {
+  if (IS_MOCK_ONLY) {
+    const item = ISOTOPIC_SIGNATURES_MOCK.find((signature) => signature.id === id);
+    return item ? { item, isMock: true } : rejectWithValue("Сигнатура не найдена");
+  }
   try {
     const { data } = await api.services.getFeedById(id);
     return { item: withMediaSrc(data), isMock: false };

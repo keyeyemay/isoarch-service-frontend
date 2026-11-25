@@ -1,6 +1,6 @@
 import "./SignatureGrid.css";
 import type { FC } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { SignatureTile, type IsotopicSignature } from "../../../entities/isotopic-signature";
 import { DeleteSignatureButton } from "../../../features/delete-signature";
 
@@ -13,6 +13,8 @@ interface Props {
   onReset: () => void;
 }
 
+const GRID_COLUMNS = { xs: 2, sm: 3, md: 4, lg: 3, xl: 4 } as const;
+
 export const SignatureGrid: FC<Props> = ({
   signatures,
   canDelete,
@@ -22,18 +24,23 @@ export const SignatureGrid: FC<Props> = ({
   onReset,
 }) => (
   <div className="grid">
-    {signatures.map((item) => (
-      <SignatureTile
-        key={item.id}
-        {...item}
-        onClick={() => onOpen(item.id)}
-        actions={
-          canDelete && item.is_creator === 1 ? (
-            <DeleteSignatureButton onDelete={() => onDelete(item.id)} disabled={disabled} />
-          ) : null
-        }
-      />
-    ))}
+    {signatures.length > 0 && (
+      <Row {...GRID_COLUMNS} className="grid__row">
+        {signatures.map((item) => (
+          <Col key={item.id} className="grid__col">
+            <SignatureTile
+              {...item}
+              onClick={() => onOpen(item.id)}
+              actions={
+                canDelete && item.is_creator === 1 ? (
+                  <DeleteSignatureButton onDelete={() => onDelete(item.id)} disabled={disabled} />
+                ) : null
+              }
+            />
+          </Col>
+        ))}
+      </Row>
+    )}
 
     {!signatures.length && !disabled && (
       <div className="empty-state">
