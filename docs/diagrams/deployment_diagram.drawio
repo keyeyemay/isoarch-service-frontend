@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio">
+  <diagram id="deployment" name="Deployment">
+    <mxGraphModel dx="590" dy="712" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="590" pageHeight="712" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="phone" value="Смартфон 192.168.0.160" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="15" y="15" width="200" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="github" value="GitHub 185.199.108.153" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="290" y="15" width="285" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="mac" value="MacBook Pro 192.168.0.172" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="15" y="130" width="560" height="567" as="geometry" />
+        </mxCell>
+        <mxCell id="node" value="Node.js (Vite)" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="30" y="145" width="215" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="python" value="Python (Uvicorn)" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="30" y="325" width="235" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="docker" value="Docker" style="shape=cube;size=10;direction=south;container=1;collapsible=0;html=1;whiteSpace=wrap;verticalAlign=top;align=center;spacingTop=8;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="30" y="452" width="515" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="chrome" value="Chrome (PWA)" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="phone">
+          <mxGeometry x="22" y="42" width="138" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pages" value="keyeyemay.github.io" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="github">
+          <mxGeometry x="17" y="42" width="248" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" value="Браузер Chrome" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="307" y="42" width="158" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="https" value="HTTPS-сервер :3000" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="node">
+          <mxGeometry x="12" y="43" width="183" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="Веб-сервис FastAPI :8000" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="python">
+          <mxGeometry x="12" y="43" width="203" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" value="PostgreSQL :5432" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="docker">
+          <mxGeometry x="12" y="40" width="158" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" value="Redis :6379" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="docker">
+          <mxGeometry x="177" y="40" width="138" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="minio" value="MinIO :9000" style="shape=module;jettyWidth=16;jettyHeight=8;html=1;whiteSpace=wrap;align=center;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="docker">
+          <mxGeometry x="327" y="40" width="168" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="index_html" value="index.html" style="shape=note;size=12;html=1;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="315" y="158" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy" value="«deploy»" style="endArrow=open;endFill=0;endSize=10;dashed=1;html=1;rounded=0;strokeColor=#000000;fontSize=12;fontFamily=Liberation Sans;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="index_html" target="node">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_api" value="/api, /s3" style="ellipse;html=1;fillColor=#FFFFFF;strokeColor=#000000;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="191" y="101" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="if_api_socket" value="" style="shape=requiredInterface;html=1;direction=north;fillColor=none;strokeColor=#000000;" vertex="1" parent="mac">
+          <mxGeometry x="185" y="95" width="30" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="if_api_provider" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="https" target="if_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_api_consumer_0" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="chrome" target="if_api_socket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_api_consumer_1" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="browser" target="if_api_socket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_web" value="WEB API" style="ellipse;html=1;fillColor=#FFFFFF;strokeColor=#000000;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="208" y="281" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="if_web_socket" value="" style="shape=requiredInterface;html=1;direction=north;fillColor=none;strokeColor=#000000;" vertex="1" parent="mac">
+          <mxGeometry x="202" y="275" width="30" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="if_web_provider" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="api" target="if_web">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_web_consumer_0" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="https" target="if_web_socket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_s3" value="S3 API" style="ellipse;html=1;fillColor=#FFFFFF;strokeColor=#000000;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=Liberation Sans;fontColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="mac">
+          <mxGeometry x="441" y="293" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="if_s3_socket" value="" style="shape=requiredInterface;html=1;direction=west;fillColor=none;strokeColor=#000000;" vertex="1" parent="mac">
+          <mxGeometry x="435" y="287" width="15" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="if_s3_provider" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="minio" target="if_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_s3_consumer_0" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="https" target="if_s3_socket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="if_s3_consumer_1" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="api" target="if_s3_socket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep_0" value="" style="endArrow=open;endFill=0;endSize=10;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="chrome" target="pages">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep_1" value="" style="endArrow=open;endFill=0;endSize=10;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="api" target="postgres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep_2" value="" style="endArrow=open;endFill=0;endSize=10;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="api" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

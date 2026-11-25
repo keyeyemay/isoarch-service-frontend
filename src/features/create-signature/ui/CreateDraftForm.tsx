@@ -3,8 +3,9 @@ import "./DraftForm.css";
 import { useState, type FC, type FormEvent } from "react";
 import { Button, Form } from "react-bootstrap";
 import type { NewSignatureData } from "../../../entities/isotopic-signature";
+import { DEFAULT_IMAGE, DEFAULT_VIDEO } from "../../../shared/config/media";
 import { useFilePreview } from "../../../shared/lib/useFilePreview";
-import { MediaUpload } from "./MediaUpload";
+import { MediaField } from "./MediaField";
 
 interface Props {
   onCreate: (data: NewSignatureData) => void;
@@ -24,9 +25,7 @@ export const CreateDraftForm: FC<Props> = ({ onCreate, disabled }) => {
   };
 
   return (
-    <Form className="draft-form" onSubmit={handleSubmit}>
-      <MediaUpload key={`${image.url}|${video.url}`} imageSrc={image.url} videoSrc={video.url} />
-
+    <Form className="draft-form draft-form--create" onSubmit={handleSubmit}>
       <div className="form-card">
         <Form.Group controlId="title" className="field">
           <Form.Label className="field__label">Название сигнатуры *</Form.Label>
@@ -40,29 +39,29 @@ export const CreateDraftForm: FC<Props> = ({ onCreate, disabled }) => {
             placeholder="Например: Погребение №15 (Бронза)"
           />
         </Form.Group>
-
-        <Form.Group controlId="image" className="field">
-          <Form.Label className="field__label">Фото: PNG, JPEG, WebP до 10 МиБ *</Form.Label>
-          <Form.Control
-            className="field__input"
-            type="file"
-            required
-            accept="image/png,image/jpeg,image/webp"
-            onChange={image.onChange}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="video" className="field">
-          <Form.Label className="field__label">Видео: MP4 до 64 МиБ и 60 секунд *</Form.Label>
-          <Form.Control
-            className="field__input"
-            type="file"
-            required
-            accept="video/mp4"
-            onChange={video.onChange}
-          />
-        </Form.Group>
       </div>
+
+      <MediaField
+        kind="image"
+        controlId="image"
+        label="Фото образца"
+        hint="PNG, JPEG, WebP до 10 МиБ"
+        accept="image/png,image/jpeg,image/webp"
+        src={image.url}
+        fallback={DEFAULT_IMAGE}
+        onChange={image.onChange}
+      />
+
+      <MediaField
+        kind="video"
+        controlId="video"
+        label="Видео анализа"
+        hint="MP4 до 64 МиБ и 60 секунд"
+        accept="video/mp4"
+        src={video.url}
+        fallback={DEFAULT_VIDEO}
+        onChange={video.onChange}
+      />
 
       <div className="action-area">
         <Button type="submit" variant="primary" disabled={disabled}>Далее</Button>

@@ -10,7 +10,7 @@
 }
 
 @media (min-width: 768px) {
-  .draft-form {
+  .draft-form:not(.draft-form--create) {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     grid-template-areas:
