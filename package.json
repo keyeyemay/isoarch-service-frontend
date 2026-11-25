@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "preview:pages": "vite preview --mode pages",
     "cert": "node scripts/generate-cert.mjs",
+    "cert:share": "node scripts/share-ca.mjs",
     "generate-api": "node scripts/generate-api.mjs"
   },
   "dependencies": {

@@ -4,23 +4,166 @@
 развёртывание на GitHub Pages и HTTPS для SPA на React: исследования костных останков
 (δ¹³C, δ¹⁵N, описание рациона, фото, видео, лайки).
 
-React 19 · TypeScript · Vite · React Router · React-Bootstrap · Redux Toolkit · redux-thunk ·
-axios · swagger-typescript-api · vite-plugin-pwa · gh-pages · mkcert. React Context не используется.
+React 19 · TypeScript · Vite 8 · React Router · React-Bootstrap · Redux Toolkit · redux-thunk ·
+axios · swagger-typescript-api · vite-plugin-pwa · gh-pages · mkcert.
 
-## Что добавлено в ЛР7
+- **Демо на GitHub Pages (только mock):** https://keyeyemay.github.io/isoarch-service-frontend/
+- **Диаграмма развёртывания:** [PNG](docs/diagrams/deployment_diagram.png) · [SVG](docs/diagrams/deployment_diagram.svg)
+- Бэкенд — репозиторий `isoarch-service-backend`, ветка `lab4-completed-spa-backend` (ЛР4).
 
-- **Адаптивность** трёх страниц — Плитка, Лента, Добавление (и страницы Вход). Раньше интерфейс
-  был колонкой 390px, теперь подстраивается под ширину от телефона до десктопа (таблица ниже).
-- **PWA**: `vite-plugin-pwa` генерирует `manifest.webmanifest` и service worker (Workbox,
-  precache сборки). Приложение устанавливается на рабочий стол / главный экран и открывается
-  без адресной строки (`display: standalone`), статика доступна офлайн.
-- **GitHub Pages**: `npm run deploy` собирает режим `pages` и публикует `dist/` в ветку
-  `gh-pages`. На Pages бэкенда нет, поэтому приложение работает **только с mock**.
-- **HTTPS** на Node.js-сервере Vite (он же реверс-прокси `/api` и `/s3`) с сертификатом
-  своего CA (mkcert), выпущенным на `localhost` и IP-адреса ноутбука.
-- **Доступ с телефона по IP ноутбука**: сервер слушает все интерфейсы (`host: true`),
-  адрес API берётся из `window.location.origin`, поэтому телефон ходит в бэкенд ноутбука
-  через тот же реверс-прокси.
+## Что сделано в ЛР7
+
+- **Адаптивность** страниц Плитка, Лента, Добавление (и Вход): от телефона до десктопа.
+- **PWA**: `vite-plugin-pwa` генерирует `manifest.webmanifest` и service worker (Workbox).
+  Приложение ставится на главный экран, открывается без адресной строки и работает офлайн.
+- **GitHub Pages**: `npm run deploy` публикует сборку в ветку `gh-pages`. Бэкенда там нет,
+  поэтому данные только mock.
+- **HTTPS** на Node.js-сервере Vite. Он же реверс-прокси `/api` → FastAPI и `/s3` → MinIO.
+  Сертификат подписан собственным CA (`npm run cert`).
+- **Доступ с телефона по IP ноутбука**: адрес API берётся из `window.location.origin`,
+  поэтому телефон ходит в бэкенд ноутбука через тот же прокси. Сам бэкенд слушает
+  только `127.0.0.1`, напрямую он из сети недоступен.
+
+## Запуск
+
+Сначала бэкенд ЛР4 (отдельный терминал):
+
+```bash
+cd ../isoarch-service-backend
+docker compose up -d --wait                                          # PostgreSQL, Redis, MinIO, Adminer
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # один раз
+.venv/bin/python main.py                                             # http://127.0.0.1:8000
+```
+
+Демонстрационные пользователи: `archaeologist_main`, `researcher_petrov`, `student_sidorov`,
+пароль `StudyPassword123`.
+
+Затем фронтенд, в папке `isoarch-service-frontend`:
+
+```bash
+npm install            # один раз
+npm run cert           # один раз и после смены Wi-Fi-сети (см. «HTTPS и телефон»)
+npm run dev            # https://localhost:3000 и https://<IP ноутбука>:3000
+```
+
+Открывать **только по `https://`**: на запрос по `http://` сервер отвечает пустым ответом.
+
+Остальные команды:
+
+```bash
+npm run build          # проверка типов и production-сборка в dist/ (с бэкендом)
+npm run preview        # раздать dist/ тем же HTTPS-сервером с прокси
+npm run build:pages    # сборка для GitHub Pages (base /isoarch-service-frontend/, только mock)
+npm run preview:pages  # проверить её локально: https://localhost:3000/isoarch-service-frontend/
+npm run deploy         # build:pages + публикация dist/ в ветку gh-pages
+npm run cert:share     # раздать cert/ca.crt на телефон по Wi-Fi
+npm run lint           # oxlint
+npm run generate-api   # перегенерировать src/shared/api/Api.ts по OpenAPI бэкенда
+```
+
+| Адрес в браузере | Куда проксируется |
+|---|---|
+| `https://localhost:3000/api/...` или `https://<IP>:3000/api/...` | `http://localhost:8000/...` (FastAPI) |
+| `https://localhost:3000/s3/<bucket>/<key>` | `http://localhost:9000/<bucket>/<key>` (MinIO) |
+
+## HTTPS и телефон
+
+PWA и service worker работают только по HTTPS с **доверенным** сертификатом. На Pages он есть
+всегда, а для ноутбука нужен свой удостоверяющий центр (CA), которому доверяют ноутбук и телефон.
+
+### 1. Выпустить сертификат — на ноутбуке
+
+В терминале, в папке фронтенда:
+
+```bash
+cd isoarch-service-frontend
+npm run cert
+```
+
+Скрипт `scripts/generate-cert.mjs` (пакет `mkcert`) создаёт папку `cert/`:
+
+| Файл | Что это |
+|---|---|
+| `ca.crt` | публичный сертификат CA «IsoArch Dev CA» — **его** ставят на ноутбук и телефон |
+| `ca.key` | закрытый ключ CA — никому не передавать |
+| `cert.crt`, `cert.key` | сертификат сервера на `localhost`, `127.0.0.1` и все IPv4 ноутбука |
+
+В конце скрипт печатает адреса, на которые выписан сертификат. Сменилась сеть и IP —
+запустите `npm run cert` ещё раз: CA переиспользуется, на телефон его ставить заново не нужно.
+Дополнительные адреса: `CERT_HOSTS=192.168.1.10 npm run cert`. Папка `cert/` в `.gitignore`,
+ключи в репозиторий не попадают. `vite.config.ts` сам подхватывает `cert/cert.crt` и
+`cert/cert.key` при следующем `npm run dev`. Если `cert/` нет, используется временный
+самоподписанный сертификат, и service worker не регистрируется.
+
+### 2. Доверять CA на ноутбуке
+
+| ОС | Как |
+|---|---|
+| macOS | `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain cert/ca.crt`, затем перезапустить Chrome |
+| Windows | двойной клик по `cert\ca.crt` → «Установить сертификат» → «Локальный компьютер» → «Доверенные корневые центры сертификации», перезапустить браузер |
+
+### 3. Передать `ca.crt` на телефон
+
+Телефон и ноутбук — в одной Wi-Fi-сети. На ноутбуке, в папке фронтенда:
+
+```bash
+npm run cert:share
+```
+
+Команда печатает ссылку вида `http://192.168.0.172:8001/ca.crt`. Откройте её на телефоне:
+в Chrome на Android файл скачается, в Safari на iPhone появится запрос на загрузку профиля.
+Сервер отдаёт только `ca.crt`, закрытые ключи недоступны. После установки остановите его: `Ctrl+C`.
+Если ссылка не открывается — проверьте, что выбран адрес Wi-Fi (`ipconfig getifaddr en0`
+на macOS), а не VPN-интерфейс, и что брандмауэр macOS разрешает входящие подключения для Node.
+Можно и без сервера: отправить `cert/ca.crt` себе через AirDrop или мессенджер.
+
+### 4. Установить `ca.crt` на телефоне
+
+| Телефон | Как |
+|---|---|
+| Android | Настройки → Безопасность → Дополнительные настройки → Шифрование и учётные данные → Установить сертификат → **Сертификат ЦС** → «Всё равно установить» → выбрать скачанный `IsoArch-ca.crt` (названия пунктов немного отличаются у производителей; можно найти поиском по настройкам «сертификат ЦС»). Затем перезапустить Chrome |
+| iPhone | после загрузки: Настройки → «Профиль загружен» → Установить. Затем **обязательно** Настройки → Основные → Об этом устройстве → Доверие сертификатам → включить «IsoArch Dev CA» |
+
+### 5. Открыть приложение с телефона
+
+1. На ноутбуке запущены бэкенд и `npm run dev`. В консоли Vite — строка
+   `Network: https://<IP ноутбука>:3000` (берите адрес Wi-Fi, например `192.168.0.172`).
+2. На телефоне открыть `https://<IP ноутбука>:3000` — замок без предупреждений.
+3. Войти: запросы идут на `https://<IP>:3000/api/...`, Vite проксирует их в FastAPI
+   ноутбука на `localhost:8000`, медиа — через `/s3` в MinIO. Cookie сессии ставится на `<IP>:3000`.
+4. Установить как приложение: Android — меню Chrome → «Установить приложение»;
+   iPhone — «Поделиться» → «На экран „Домой“».
+
+Если macOS спрашивает, разрешить ли `node` входящие подключения, — разрешить.
+
+## GitHub Pages (только mock)
+
+Адрес: https://keyeyemay.github.io/isoarch-service-frontend/
+
+- `vite.config.ts`: в режиме `pages` `base: '/isoarch-service-frontend/'` (имя репозитория).
+  `BrowserRouter` получает `basename` из `import.meta.env.BASE_URL`, пути к заглушкам
+  (`default_signature.*`) тоже строятся от него.
+- `.env.pages`: `VITE_DATA_SOURCE=mock` → `IS_MOCK_ONLY` в `shared/config/api.ts`. Thunk
+  `getSignaturesList` и `getSignature` сразу возвращают mock (с фильтрацией), запросы не
+  отправляются; на плитке — пометка «Демо-версия на GitHub Pages — показаны mock-данные»,
+  кнопка «Войти» выключена с пояснением.
+- `build:pages` копирует `index.html` в `404.html`: GitHub Pages отдаёт его на любой
+  неизвестный путь, поэтому прямые ссылки и F5 на `/feed/2` открывают SPA.
+- `npm run deploy` (пакет `gh-pages`) пушит `dist/` в ветку `gh-pages` с `.nojekyll`.
+  В настройках репозитория: Settings → Pages → Source «Deploy from a branch», ветка `gh-pages`, `/ (root)`.
+
+## PWA
+
+- `vite.config.ts` → `VitePWA({ registerType: 'autoUpdate', devOptions: { enabled: true }, manifest, workbox })`.
+  Манифест: имя «IsoArch — изотопные сигнатуры», `display: standalone`, цвет темы `#CF3B3B`,
+  иконки `public/pwa-192x192.png`, `pwa-512x512.png` (+ maskable), `apple-touch-icon.png`.
+  `start_url` и `scope` относительные, поэтому одинаково работают на `/` и на Pages.
+- Service worker (Workbox `generateSW`) кэширует всю сборку (js, css, html, иконки, заглушки);
+  запросы `/api/*` и `/s3/*` не перехватываются навигационным fallback.
+- Регистрация — `src/main.tsx`: `registerSW` из `virtual:pwa-register`. Типы —
+  `vite-plugin-pwa/client.d.ts` в `tsconfig.app.json`.
+- Проверка: DevTools → Application → Manifest (без ошибок) и Service workers (activated).
+  На ПК — значок «Установить приложение» в адресной строке.
 
 ## Адаптивность: точки перелома и значения
 
@@ -38,68 +181,23 @@ axios · swagger-typescript-api · vite-plugin-pwa · gh-pages · mkcert. React 
 | Добавление | `features/create-signature/ui/DraftForm.css`, `MediaUpload.css` | одна колонка; на `sm` превью фото и видео рядом; на `md` две колонки **5fr : 7fr** — слева превью (sticky), справа поля и кнопки |
 | Навигация | `widgets/tab-bar/ui/TabBar.css`, `widgets/top-nav/ui/TopNav.css` | таббар снизу всегда; на `md` пункты по **160px** по центру; верхняя панель выровнена по краю контента |
 
-Проверка: DevTools → Toggle device toolbar (Ctrl+Shift+M) → «Responsive», менять ширину.
+Проверка: DevTools → Toggle device toolbar (Ctrl+Shift+M / Cmd+Shift+M) → «Responsive», менять ширину.
 
-## Что добавлено после ЛР5
+## Работа с веб-сервисом (ЛР6)
 
 - Карточки загружаются из веб-сервиса ЛР4 (FastAPI). Если бэкенд недоступен, **гостю**
-  показываются mock-объекты (с пометкой «Сервер недоступен — показаны демонстрационные данные»).
+  показываются mock-объекты с пометкой «Сервер недоступен — показаны демонстрационные данные».
 - Redux Toolkit хранит фильтр услуг, список, текущую запись, черновик и признак входа.
-  Redux DevTools подключается автоматически (`configureStore`).
 - Запросы домена услуг — через сгенерированный по OpenAPI клиент (axios) внутри
   `createAsyncThunk`. Вход и выход — только axios, результат вручную передаётся в Redux
   обычным action, без кодогенерации и thunk.
-- Страницы «Вход» и «Добавление», кнопки «Удалить» (плитка) и лайк (лента).
 - Во время запросов поверх приложения показывается анимация, блокирующая кнопки.
-- CORS решён проксированием dev-сервера: `/api` → бэкенд, `/s3` → MinIO.
-
-Признак входа хранится только в Redux (в оперативной памяти), в localStorage его не кладём:
-**по F5 интерфейс возвращается к гостю** — это намеренный недостаток ЛР6.
-
-## Запуск
-
-```bash
-npm install
-npm run cert           # один раз: CA и сертификат в cert/ (см. «HTTPS»)
-npm run dev            # https://localhost:3000 и https://<IP ноутбука>:3000
-npm run build          # проверка типов и production-сборка в dist/ (с бэкендом)
-npm run preview        # раздать dist/ тем же HTTPS-сервером с прокси
-npm run build:pages    # сборка для GitHub Pages (base /isoarch-service-frontend/, только mock)
-npm run preview:pages  # проверить её локально: https://localhost:3000/isoarch-service-frontend/
-npm run deploy         # build:pages + публикация dist/ в ветку gh-pages
-npm run lint           # oxlint
-npm run generate-api   # перегенерировать src/shared/api/Api.ts по OpenAPI бэкенда
-```
-
-Открывать **только по `https://`** — адрес без него браузер открывает по http, и сервер отвечает
-пустым ответом. Если `cert/` нет, Vite использует самоподписанный сертификат
-`@vitejs/plugin-basic-ssl` (браузер предупредит: «Дополнительно» → «Перейти на сайт»;
-service worker с таким сертификатом не регистрируется).
-
-Бэкенд ЛР4 (репозиторий `isoarch-service-backend`, ветка `lab4-completed-spa-backend`) должен
-работать на `http://localhost:8000`, MinIO — на `http://localhost:9000`:
-
-```bash
-cd ../isoarch-service-backend
-docker compose up -d --wait          # PostgreSQL, Redis, MinIO, Adminer
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # один раз
-.venv/bin/python main.py             # http://localhost:8000
-```
-
-Демонстрационные пользователи новой БД: `archaeologist_main`, `researcher_petrov`, `student_sidorov`,
-пароль `StudyPassword123`.
-
-| Адрес в браузере | Куда проксируется |
-|---|---|
-| `https://localhost:3000/api/...` (или `https://<IP>:3000/api/...`) | `http://localhost:8000/...` (FastAPI) |
-| `https://localhost:3000/s3/<bucket>/<key>` | `http://localhost:9000/<bucket>/<key>` (MinIO) |
+- Признак входа хранится только в Redux, не в localStorage: **по F5 интерфейс возвращается
+  к гостю** — намеренный недостаток ЛР6.
 
 Кодогенерация: `npm run generate-api` берёт схему с `http://localhost:8000/openapi.json`
 (или из файла: `OPENAPI_FILE=./openapi.json npm run generate-api`). Генерируются только семь
-методов услуг (список задан в `scripts/generate-api.mjs`), названия — по функциям бэкенда:
-`api.services.getServices`, `api.services.createDraft` и т. д. Все они вызываются через thunk.
-Всего приложение делает 9 запросов к веб-сервису, все через axios: эти 7 и вход/выход.
-Регистрации нет.
+методов услуг (список в `scripts/generate-api.mjs`), все вызываются через thunk.
 
 | Thunk | Метод клиента | Запрос |
 |---|---|---|
@@ -114,91 +212,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # один 
 Авторизация вручную через axios: `POST /auth/login`, `POST /auth/logout`
 (`src/features/auth/api/authApi.ts`). Сессия — HttpOnly cookie `session_id`, её ставит бэкенд.
 
-## GitHub Pages (только mock)
-
-- `vite.config.ts`: в режиме `pages` `base: '/isoarch-service-frontend/'` (имя репозитория).
-  `BrowserRouter` получает `basename` из `import.meta.env.BASE_URL`, пути к заглушкам
-  (`default_signature.*`) тоже строятся от него.
-- `.env.pages`: `VITE_DATA_SOURCE=mock` → `IS_MOCK_ONLY` в `shared/config/api.ts`. Thunk
-  `getSignaturesList` и `getSignature` сразу возвращают mock (с фильтрацией), запросы не
-  отправляются; на плитке — пометка «Демо-версия на GitHub Pages — показаны mock-данные»,
-  вход недоступен (кнопка «Войти» выключена, показано пояснение).
-- `build:pages` копирует `index.html` в `404.html`: GitHub Pages отдаёт его на любой
-  неизвестный путь, поэтому прямые ссылки и F5 на `/feed/2` открывают SPA.
-- `npm run deploy` (пакет `gh-pages`) пушит `dist/` в ветку `gh-pages` с `.nojekyll`.
-  Один раз в настройках репозитория: Settings → Pages → Source: «Deploy from a branch»,
-  ветка `gh-pages`, папка `/ (root)`. Адрес: https://keyeyemay.github.io/isoarch-service-frontend/
-
-## PWA
-
-- `vite.config.ts` → `VitePWA({ registerType: 'autoUpdate', devOptions: { enabled: true }, manifest, workbox })`.
-  Манифест: имя «IsoArch — изотопные сигнатуры», `display: standalone`, цвет темы `#CF3B3B`,
-  иконки `public/pwa-192x192.png`, `pwa-512x512.png` (+ maskable), `apple-touch-icon.png`.
-  `start_url` и `scope` относительные, поэтому одинаково работают на `/` и на Pages.
-- Service worker (Workbox `generateSW`) кэширует всю сборку (js, css, html, иконки, заглушки);
-  запросы `/api/*` и `/s3/*` не перехватываются навигационным fallback.
-- Регистрация — `src/main.tsx`: `registerSW` из `virtual:pwa-register`, если браузер
-  поддерживает `serviceWorker`. Типы — `vite-plugin-pwa/client.d.ts` в `tsconfig.app.json`.
-- Проверка: DevTools → Application → Manifest (без ошибок) и Service workers (activated).
-  Установка: на ПК — значок «Установить приложение» в адресной строке; на Android в Chrome —
-  меню → «Добавить на главный экран» / «Установить приложение»; на iPhone в Safari —
-  «Поделиться» → «На экран „Домой“».
-- PWA требует HTTPS с **доверенным** сертификатом: на Pages это есть всегда, локально — после
-  установки нашего CA (ниже).
-
-## HTTPS
-
-Сервер Vite — Node.js реверс-прокси: отдаёт фронтенд и проксирует `/api` → `:8000`, `/s3` → `:9000`.
-HTTPS включён в `vite.config.ts` (`server.https` и `preview.https`): если есть
-`cert/cert.key` и `cert/cert.crt`, используются они, иначе — `plugin-basic-ssl`.
-
-`npm run cert` (`scripts/generate-cert.mjs`, пакет `mkcert`):
-
-1. Создаёт свой удостоверяющий центр `cert/ca.crt` + `cert/ca.key` (один раз; при повторном
-   запуске переиспользуется, чтобы не переустанавливать его на телефоне).
-2. Выпускает `cert/cert.crt` + `cert/cert.key`, подписанный этим CA, на `localhost`,
-   `127.0.0.1`, все IPv4 машины, а в WSL — ещё и IPv4 Windows (сетевой адрес ноутбука).
-   Дополнительные адреса: `CERT_HOSTS=192.168.1.10,laptop.local npm run cert`.
-   Список адресов выводится в консоль. Сменился IP (другая сеть) — запустить ещё раз.
-
-Папка `cert/` в `.gitignore` — **закрытые ключи в репозиторий не попадают**.
-
-Сделать сертификат доверенным (устанавливается только `ca.crt`):
-
-| Где | Как |
-|---|---|
-| Windows (Chrome/Edge) | двойной клик по `cert\ca.crt` → «Установить сертификат» → «Локальный компьютер» → «Поместить все сертификаты в хранилище» → «Доверенные корневые центры сертификации». Перезапустить браузер |
-| Android | скопировать `ca.crt` на телефон → Настройки → Безопасность → Шифрование и учётные данные → Установить сертификат → «Сертификат ЦС» |
-| iPhone | открыть `ca.crt` в Safari → установить профиль → Настройки → Основные → Об этом устройстве → Доверие сертификатам → включить |
-
-После этого замок в адресной строке без предупреждений, а service worker регистрируется и по IP.
-
-## Телефон в одной сети с ноутбуком
-
-1. Телефон и ноутбук — в одной Wi-Fi-сети (или телефон раздаёт точку доступа).
-2. Запустить бэкенд ЛР4 (ниже) и `npm run dev`. В консоли Vite — строки `Network: https://<IP>:3000`.
-3. На телефоне открыть `https://<IP ноутбука>:3000`, войти — запросы идут на
-   `https://<IP>:3000/api/...`, Vite проксирует их в FastAPI ноутбука на `localhost:8000`,
-   медиа — через `/s3` в MinIO. Cookie сессии ставится на адрес `<IP>:3000`.
-
-**Если проект запущен в WSL2** (режим сети NAT), у WSL свой внутренний IP, и телефон его не видит.
-Варианты (PowerShell от администратора):
-
-```powershell
-# вариант 1: проброс порта Windows → WSL (IP WSL: `hostname -I` в WSL; меняется после перезапуска WSL)
-netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=3000 connectaddress=<IP WSL> connectport=3000
-New-NetFirewallRule -DisplayName "IsoArch 3000" -Direction Inbound -Protocol TCP -LocalPort 3000 -Action Allow
-# убрать: netsh interface portproxy delete v4tov4 listenaddress=0.0.0.0 listenport=3000
-```
-
-Вариант 2: в `%UserProfile%\.wslconfig` указать `[wsl2]` / `networkingMode=mirrored`,
-выполнить `wsl --shutdown` — тогда WSL получает адреса Windows, проброс не нужен
-(правило брандмауэра для порта 3000 всё равно может понадобиться).
-IP ноутбука в Wi-Fi-сети — `ipconfig` в Windows («Беспроводная сеть», IPv4-адрес).
-
 ## Страницы
-
-Интерфейс адаптивный: на телефоне — как в ЛР6, на планшете и компьютере — см. «Адаптивность».
 
 ### Плитка — `/`
 
@@ -214,7 +228,7 @@ IP ноутбука в Wi-Fi-сети — `ipconfig` в Windows («Беспро�
 | Кнопка «Удалить» на карточке | Только после входа и только у своих записей; с подтверждением |
 | «Ничего не найдено по заданному фильтру» | С кнопкой «Сбросить фильтр» |
 
-Значения полей фильтра хранятся в Redux и сохраняются при переходах между страницами.
+Значения фильтра хранятся в Redux и сохраняются при переходах между страницами.
 При выходе фильтр сбрасывается.
 
 ### Лента — `/feed` и `/feed/:id`
@@ -225,7 +239,7 @@ IP ноутбука в Wi-Fi-сети — `ipconfig` в Windows («Беспро�
 | Заголовок и описание | Описание обрезано до двух строк |
 | Кнопка «Ещё» / «Свернуть» | Раскрывает и сворачивает описание |
 | Чипы δ¹³C и δ¹⁵N | Значения изотопов, например `-19.5 ‰` |
-| Кнопка-сердечко с числом | После входа ставит/снимает лайк (заливка = лайк поставлен). Гостя переводит на «Вход» |
+| Кнопка-сердечко с числом | После входа ставит/снимает лайк. Гостя переводит на «Вход» |
 | Кнопка со стрелкой вниз | Следующая сигнатура в порядке плитки (с учётом фильтра), после последней — первая |
 
 `/feed` открывает первую сигнатуру текущего списка.
@@ -234,9 +248,8 @@ IP ноутбука в Wi-Fi-сети — `ipconfig` в Windows («Беспро�
 
 | Элемент | Описание |
 |---|---|
-| Поле «Логин» | Имя пользователя |
-| Поле «Пароль» | Пароль |
-| Кнопка «Войти» | Вход; при ошибке — «Неверный логин или пароль». После входа — возврат на страницу, откуда пришли (по умолчанию плитка) |
+| Поля «Логин» и «Пароль» | Учётные данные |
+| Кнопка «Войти» | При ошибке — «Неверный логин или пароль». После входа — возврат на страницу, откуда пришли (по умолчанию плитка) |
 
 ### Добавление — `/add` (только после входа, иначе — переход на «Вход»)
 
@@ -279,5 +292,6 @@ IP ноутбука в Wi-Fi-сети — `ipconfig` в Windows («Беспро�
 | `shared/` | Сгенерированный клиент `api/`, конфиг маршрутов, API и режима mock (`config/api.ts`), обработка ошибок, общие UI |
 
 Вне `src/`: `vite.config.ts` (прокси, HTTPS, PWA, base для Pages), `.env.pages`,
-`scripts/generate-cert.mjs` (сертификаты), `scripts/generate-api.mjs` (кодогенерация),
-`public/` (иконки PWA, заглушки медиа).
+`scripts/generate-cert.mjs` и `scripts/share-ca.mjs` (сертификаты),
+`scripts/generate-api.mjs` (кодогенерация), `public/` (иконки PWA, заглушки медиа),
+`docs/` (материалы курса, диаграммы, РПЗ).

@@ -21,7 +21,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.venv
 
 cert/
 dev-dist/
